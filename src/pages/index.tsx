@@ -79,7 +79,7 @@ const Home: NextPage = () => {
             dispatch(createQueue(enqueued))
           }}
         >
-          CREATE QUEUE 1
+          CREATE QUEUE
         </button>
         <button
           className='btn btn-secondary'
