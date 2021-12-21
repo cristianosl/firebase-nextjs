@@ -1,26 +1,21 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { useSelector, useDispatch } from 'react-redux'
-import { RootState } from '../store'
-import { increment, decrement } from '../store/queue'
+import { increment, decrement } from '../store/count'
 import { getMessaging, getToken, Messaging } from "firebase/messaging";
 import { useEffect, useState } from 'react'
 import { firebaseApp } from '../config/firebase'
 import { CardCoa, CardCoaProps } from '../components/CardCoa'
+import { useAppSelector, useAppDispatch } from '../store/hooks'
+import { createQueue, updateQueue, updateQueuePosition, updateQueueStatusToDone, updateQueueStatusToInCall, updateQueueStatusToReady } from '../store/queue';
+import { shallowEqual } from 'react-redux';
 
 
 const Home: NextPage = () => {
-  const count = useSelector((state: RootState) => state.counter.value)
-  const dispatch = useDispatch()
+  const count = useAppSelector((state) => state.counter.value)
+  const dispatch = useAppDispatch()
   const [messaging, setMessaging] = useState<Messaging>()
-  const [cardCoa, setCardCoa] = useState<CardCoaProps>({
-    id: "84182",
-    position: "1",
-    status: "ENQUEUED",
-    updatedAt: new Date("2021-12-21T14:09:19.030Z"),
-    attendanceId: null
-  })
 
+  const cardCoa = useAppSelector(state => state.queue, shallowEqual)
   useEffect(() => {
     setMessaging(getMessaging(firebaseApp))
     if (messaging) {
@@ -61,85 +56,88 @@ const Home: NextPage = () => {
           <CardCoa {...cardCoa} />
         </div>
       </div>
+
       <div className="d-flex flex-row justify-content-between">
         <button
           className='btn btn-secondary'
           aria-label="Increment value"
-          onClick={() => setCardCoa({
-            id: "84182",
-            position: "1",
-            status: "ENQUEUED",
-            updatedAt: new Date("2021-12-21T14:09:19.030Z"),
-            attendanceId: null
-          })}
+          onClick={() => {
+            const enqueued: CardCoaProps = {
+              id: "84182",
+              position: "10",
+              status: "ENQUEUED",
+              updatedAt: new Date("2021-12-21T14:09:10.030Z"),
+              attendanceId: null
+            }
+            dispatch(createQueue(enqueued))
+          }}
         >
-          ENQUEUED
+          CREATE QUEUE
         </button>
         <button
           className='btn btn-secondary'
           aria-label="Increment value"
-          onClick={() => setCardCoa({
-            id: "84182",
-            position: null,
-            status: "READY",
-            updatedAt: new Date("2021-12-21T14:09:31.135Z"),
-            attendanceId: null
-          })}
+          onClick={() => {
+
+            dispatch(updateQueuePosition({
+              position: "1",
+              updatedAt: new Date("2021-12-21T14:09:19.030Z")
+            }))
+          }}
+        >
+          UPDATE POSITION ENQUEUED
+        </button>
+        <button
+          className='btn btn-secondary'
+          aria-label="Increment value"
+          onClick={() => {
+            dispatch(updateQueue({
+              id: "84182",
+              position: "8",
+              status: "ENQUEUED",
+              updatedAt: new Date("2021-12-21T14:02:10.030Z"),
+              attendanceId: null
+            }))
+          }}
+        >
+          UPDATE QUEUE
+        </button>
+        <button
+          className='btn btn-secondary'
+          aria-label="Increment value"
+          onClick={() => {
+
+            dispatch(updateQueueStatusToReady({ updatedAt: new Date("2021-12-21T14:09:31.135Z") }))
+          }}
         >
           READY
         </button>
         <button
           className='btn btn-secondary'
           aria-label="Increment value"
-          onClick={() => setCardCoa({
-            id: "84182",
-            position: null,
-            status: "IN_CALL",
-            updatedAt: new Date("2021-12-21T14:10:08.438Z"),
-            attendanceId: "147608"
-          })}
+          onClick={() => {
+            const inCall: CardCoaProps = {
+              id: "84182",
+              position: null,
+              status: "IN_CALL",
+              updatedAt: new Date("2021-12-21T14:10:08.438Z"),
+              attendanceId: "147608"
+            };
+            dispatch(updateQueueStatusToInCall({ attendanceId: "147608", updatedAt: new Date("2021-12-21T14:10:08.438Z") }))
+          }}
         >
           IN_CALL
         </button>
         <button
           className='btn btn-secondary'
           aria-label="Increment value"
-          onClick={() => setCardCoa({
-            id: "84182",
-            position: null,
-            status: "DONE",
-            updatedAt: new Date("2021-12-21T14:10:34.968Z"),
-            attendanceId: "147608"
-          })}
+          onClick={() => {
+            dispatch(updateQueueStatusToDone({ updatedAt: new Date("2021-12-21T14:10:34.968Z") }))
+          }}
         >
           DONE
         </button>
       </div>
-
-
-      {/* <div className="row">
-        <div className="col">
-          <button
-            className='btn btn-secondary'
-            aria-label="Increment value"
-            onClick={() => dispatch(increment())}
-          >
-            Increment
-          </button>
-        </div>
-        <div className="col">
-          <span>{count}</span>
-        </div>
-        <div className="col">
-          <button
-            className='btn btn-secondary'
-            aria-label="Decrement value"
-            onClick={() => dispatch(decrement())}
-          >
-            Decrement
-          </button>
-        </div>
-      </div> */}
     </div>
   )
 }
