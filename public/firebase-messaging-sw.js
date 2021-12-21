@@ -10,9 +10,9 @@ if (!firebase.apps.length) {
     projectId: "testefirebasecristiano",
     storageBucket: "testefirebasecristiano.appspot.com",
   });
-  firebase.messaging();
+  const messaging = firebase.messaging();
   //background notifications will be received here
-  firebase
-    .messaging()
-    .setBackgroundMessageHandler((payload) => console.log("payload", payload));
+  messaging.setBackgroundMessageHandler((payload) =>
+    console.log("payload", payload)
+  );
 }
