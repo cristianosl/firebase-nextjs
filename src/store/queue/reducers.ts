@@ -13,7 +13,7 @@ const initialState: CardCoaProps = {
   id: "84182",
   position: null,
   status: "IN_CALL",
-  updatedAt: new Date("2021-12-21T14:10:08.438Z"),
+  updatedAt: "2021-12-21T14:10:08.438Z",
   attendanceId: "147608",
 };
 export const queueReducer = createReducer(initialState, (builder) => {

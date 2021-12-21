@@ -4,7 +4,7 @@ export type CardCoaProps = {
   id: string
   status: QueueStatus
   position: string | null
-  updatedAt: Date
+  updatedAt: string
   attendanceId: string | null
 }
 

@@ -1,42 +1,49 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { increment, decrement } from '../store/count'
-import { getMessaging, getToken, Messaging } from "firebase/messaging";
+import { getMessaging, getToken, Messaging, onMessage } from "firebase/messaging";
 import { useEffect, useState } from 'react'
-import { firebaseApp } from '../config/firebase'
+import { firebaseConfig } from '../config/firebase'
 import { CardCoa, CardCoaProps } from '../components/CardCoa'
 import { useAppSelector, useAppDispatch } from '../store/hooks'
 import { createQueue, updateQueue, updateQueuePosition, updateQueueStatusToDone, updateQueueStatusToInCall, updateQueueStatusToReady } from '../store/queue';
 import { shallowEqual } from 'react-redux';
+import { initializeApp } from 'firebase/app';
 
 
 const Home: NextPage = () => {
-  const count = useAppSelector((state) => state.counter.value)
   const dispatch = useAppDispatch()
   const [messaging, setMessaging] = useState<Messaging>()
 
   const cardCoa = useAppSelector(state => state.queue, shallowEqual)
   useEffect(() => {
+    if (!process.browser) return
+
+    // Initialize Firebase
+    const firebaseApp = initializeApp(firebaseConfig);
+
     setMessaging(getMessaging(firebaseApp))
     if (messaging) {
-      console.log('process.env.NEXT_PUBLIC_FIREBASE_FCM_KEY_PAIR', process.env.NEXT_PUBLIC_FIREBASE_FCM_KEY_PAIR)
-      getToken(messaging, { vapidKey: process.env.NEXT_PUBLIC_FIREBASE_FCM_KEY_PAIR })
-        .then((currentToken) => {
-          console.log('oi')
-          if (currentToken) {
-            // Send the token to your server and update the UI if necessary
-            // ...
-            console.log('currentToken', currentToken)
-          } else {
-            // Show permission request UI
-            console.log('No registration token available. Request permission to generate one.');
-            // ...
-          }
-        }).catch((err) => {
-          console.log('falhou')
-          console.log('An error occurred while retrieving token. ', err);
+      getToken(messaging, { vapidKey: process.env.NEXT_PUBLIC_FIREBASE_FCM_KEY_PAIR }).then((currentToken) => {
+        if (currentToken) {
+          // Send the token to your server and update the UI if necessary
           // ...
-        });
+          console.log('currentToken', currentToken)
+        } else {
+          // Show permission request UI
+          console.log('No registration token available. Request permission to generate one.');
+          // ...
+        }
+      }).catch((err) => {
+        console.log('2An error occurred while retrieving token. ', err);
+        // ...
+      });
+
+
+      onMessage(messaging, (payload) => {
+        console.log('Message received. ', payload);
+        // ...
+      });
+
     }
 
   }, [messaging])
@@ -66,7 +73,7 @@ const Home: NextPage = () => {
               id: "84182",
               position: "10",
               status: "ENQUEUED",
-              updatedAt: new Date("2021-12-21T14:09:10.030Z"),
+              updatedAt: "2021-12-21T14:09:10.030Z",
               attendanceId: null
             }
             dispatch(createQueue(enqueued))
@@ -81,7 +88,7 @@ const Home: NextPage = () => {
 
             dispatch(updateQueuePosition({
               position: "1",
-              updatedAt: new Date("2021-12-21T14:09:19.030Z")
+              updatedAt: "2021-12-21T14:09:19.030Z"
             }))
           }}
         >
@@ -95,7 +102,7 @@ const Home: NextPage = () => {
               id: "84182",
               position: "8",
               status: "ENQUEUED",
-              updatedAt: new Date("2021-12-21T14:02:10.030Z"),
+              updatedAt: "2021-12-21T14:02:10.030Z",
               attendanceId: null
             }))
           }}
@@ -107,7 +114,7 @@ const Home: NextPage = () => {
           aria-label="Increment value"
           onClick={() => {
 
-            dispatch(updateQueueStatusToReady({ updatedAt: new Date("2021-12-21T14:09:31.135Z") }))
+            dispatch(updateQueueStatusToReady({ updatedAt: "2021-12-21T14:09:31.135Z" }))
           }}
         >
           READY
@@ -120,10 +127,10 @@ const Home: NextPage = () => {
               id: "84182",
               position: null,
               status: "IN_CALL",
-              updatedAt: new Date("2021-12-21T14:10:08.438Z"),
+              updatedAt: "2021-12-21T14:10:08.438Z",
               attendanceId: "147608"
             };
-            dispatch(updateQueueStatusToInCall({ attendanceId: "147608", updatedAt: new Date("2021-12-21T14:10:08.438Z") }))
+            dispatch(updateQueueStatusToInCall({ attendanceId: "147608", updatedAt: "2021-12-21T14:10:08.438Z" }))
           }}
         >
           IN_CALL
@@ -132,7 +139,7 @@ const Home: NextPage = () => {
           className='btn btn-secondary'
           aria-label="Increment value"
           onClick={() => {
-            dispatch(updateQueueStatusToDone({ updatedAt: new Date("2021-12-21T14:10:34.968Z") }))
+            dispatch(updateQueueStatusToDone({ updatedAt: "2021-12-21T14:10:34.968Z" }))
           }}
         >
           DONE
