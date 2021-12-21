@@ -6,12 +6,20 @@ import { increment, decrement } from '../store/queue'
 import { getMessaging, getToken, Messaging } from "firebase/messaging";
 import { useEffect, useState } from 'react'
 import { firebaseApp } from '../config/firebase'
+import { CardCoa, CardCoaProps } from '../components/CardCoa'
 
 
 const Home: NextPage = () => {
   const count = useSelector((state: RootState) => state.counter.value)
   const dispatch = useDispatch()
   const [messaging, setMessaging] = useState<Messaging>()
+  const [cardCoa, setCardCoa] = useState<CardCoaProps>({
+    id: "84182",
+    position: "1",
+    status: "ENQUEUED",
+    updatedAt: new Date("2021-12-21T14:09:19.030Z"),
+    attendanceId: null
+  })
 
   useEffect(() => {
     setMessaging(getMessaging(firebaseApp))
@@ -48,8 +56,68 @@ const Home: NextPage = () => {
       </Head>
 
       <h1>Teste</h1>
+      <div className='row pb-3'>
+        <div className="col">
+          <CardCoa {...cardCoa} />
+        </div>
+      </div>
+      <div className="d-flex flex-row justify-content-between">
+        <button
+          className='btn btn-secondary'
+          aria-label="Increment value"
+          onClick={() => setCardCoa({
+            id: "84182",
+            position: "1",
+            status: "ENQUEUED",
+            updatedAt: new Date("2021-12-21T14:09:19.030Z"),
+            attendanceId: null
+          })}
+        >
+          ENQUEUED
+        </button>
+        <button
+          className='btn btn-secondary'
+          aria-label="Increment value"
+          onClick={() => setCardCoa({
+            id: "84182",
+            position: null,
+            status: "READY",
+            updatedAt: new Date("2021-12-21T14:09:31.135Z"),
+            attendanceId: null
+          })}
+        >
+          READY
+        </button>
+        <button
+          className='btn btn-secondary'
+          aria-label="Increment value"
+          onClick={() => setCardCoa({
+            id: "84182",
+            position: null,
+            status: "IN_CALL",
+            updatedAt: new Date("2021-12-21T14:10:08.438Z"),
+            attendanceId: "147608"
+          })}
+        >
+          IN_CALL
+        </button>
+        <button
+          className='btn btn-secondary'
+          aria-label="Increment value"
+          onClick={() => setCardCoa({
+            id: "84182",
+            position: null,
+            status: "DONE",
+            updatedAt: new Date("2021-12-21T14:10:34.968Z"),
+            attendanceId: "147608"
+          })}
+        >
+          DONE
+        </button>
+      </div>
 
-      <div className="row">
+
+      {/* <div className="row">
         <div className="col">
           <button
             className='btn btn-secondary'
@@ -71,7 +139,7 @@ const Home: NextPage = () => {
             Decrement
           </button>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }
