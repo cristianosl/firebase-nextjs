@@ -100,7 +100,6 @@ const Home: NextPage = () => {
           className='btn btn-secondary'
           aria-label="Increment value"
           onClick={() => {
-
             dispatch(updateQueuePosition({
               position: "1",
               updatedAt: "2021-12-21T14:09:19.030Z"
@@ -138,13 +137,6 @@ const Home: NextPage = () => {
           className='btn btn-secondary'
           aria-label="Increment value"
           onClick={() => {
-            const inCall: CardCoaProps = {
-              id: "84182",
-              position: null,
-              status: "IN_CALL",
-              updatedAt: "2021-12-21T14:10:08.438Z",
-              attendanceId: "147608"
-            };
             dispatch(updateQueueStatusToInCall({ attendanceId: "147608", updatedAt: "2021-12-21T14:10:08.438Z" }))
           }}
         >
