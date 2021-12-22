@@ -12,29 +12,39 @@ import { initializeApp } from 'firebase/app';
 
 const Home: NextPage = () => {
   const dispatch = useAppDispatch()
-  const [messaging, setMessaging] = useState<Messaging>()
 
   const cardCoa = useAppSelector(state => state.queue, shallowEqual)
   useEffect(() => {
-    if (!process.browser) return
+    // if (!process.browser) return
 
     // Initialize Firebase
     const firebaseApp = initializeApp(firebaseConfig);
 
-    setMessaging(getMessaging(firebaseApp))
+    const messaging = getMessaging(firebaseApp)
     if (messaging) {
       getToken(messaging, { vapidKey: process.env.NEXT_PUBLIC_FIREBASE_FCM_KEY_PAIR }).then((currentToken) => {
         if (currentToken) {
           // Send the token to your server and update the UI if necessary
           // ...
           console.log('currentToken', currentToken)
+
+
+          // messaging.subscribeToTopic(currentToken, 'TEST_TOPIC')
+          //   .then((response) => {
+          //     // See the MessagingTopicManagementResponse reference documentation
+          //     // for the contents of response.
+          //     console.log('Successfully subscribed to topic:', response);
+          //   })
+          //   .catch((error) => {
+          //     console.log('Error subscribing to topic:', error);
+          //   });
         } else {
           // Show permission request UI
           console.log('No registration token available. Request permission to generate one.');
           // ...
         }
       }).catch((err) => {
-        console.log('2An error occurred while retrieving token. ', err);
+        console.log('An error occurred while retrieving token. ', err);
         // ...
       });
 
@@ -46,7 +56,7 @@ const Home: NextPage = () => {
 
     }
 
-  }, [messaging])
+  }, [])
 
 
   return (
