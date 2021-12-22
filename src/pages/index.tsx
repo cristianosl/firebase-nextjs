@@ -27,17 +27,6 @@ const Home: NextPage = () => {
           // Send the token to your server and update the UI if necessary
           // ...
           console.log('currentToken', currentToken)
-
-
-          // messaging.subscribeToTopic(currentToken, 'TEST_TOPIC')
-          //   .then((response) => {
-          //     // See the MessagingTopicManagementResponse reference documentation
-          //     // for the contents of response.
-          //     console.log('Successfully subscribed to topic:', response);
-          //   })
-          //   .catch((error) => {
-          //     console.log('Error subscribing to topic:', error);
-          //   });
         } else {
           // Show permission request UI
           console.log('No registration token available. Request permission to generate one.');
