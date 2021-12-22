@@ -51,12 +51,17 @@ const Home: NextPage = () => {
 
       onMessage(messaging, (payload) => {
         console.log('Message received. ', payload);
+        if (payload.data?.redux_action) {
+          const queuePosition = JSON.parse(payload.data.redux_action).payload as CardCoaProps
+          dispatch(createQueue(queuePosition))
+          console.log('queuePosition', queuePosition)
+        }
         // ...
       });
 
     }
 
-  }, [])
+  }, [dispatch])
 
 
   return (
