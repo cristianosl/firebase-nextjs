@@ -7,14 +7,14 @@ import {
   updateQueueStatusToInCall,
   updateQueue,
 } from ".";
-import { CardCoaProps } from "../../components/CardCoa";
+import { IQueuePosition } from "../../types/QueuePosition";
 
-const initialState: CardCoaProps = {
+const initialState: IQueuePosition = {
   id: "84182",
   position: null,
-  status: "IN_CALL",
+  status: "DONE",
   updatedAt: "2021-12-21T14:10:08.438Z",
-  attendanceId: "147608",
+  attendanceId: null,
 };
 export const queueReducer = createReducer(initialState, (builder) => {
   builder
@@ -28,6 +28,7 @@ export const queueReducer = createReducer(initialState, (builder) => {
       return {
         ...state,
         status: "ENQUEUED",
+        attendanceId: null,
         ...action.payload,
       };
     })
@@ -43,6 +44,7 @@ export const queueReducer = createReducer(initialState, (builder) => {
       return {
         ...state,
         status: "IN_CALL",
+        position: null,
         ...action.payload,
       };
     })
@@ -50,6 +52,7 @@ export const queueReducer = createReducer(initialState, (builder) => {
       return {
         ...state,
         status: "DONE",
+        position: null,
         ...action.payload,
       };
     });
