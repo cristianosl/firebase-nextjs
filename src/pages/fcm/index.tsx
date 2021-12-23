@@ -9,6 +9,7 @@ import { initializeApp } from 'firebase/app';
 import QueuePositions from '../../components/QueuePositions';
 import { updateQueue } from '../../store/queue';
 import Link from 'next/link';
+import { IQueuePosition } from '../../types/QueuePosition';
 
 
 const FCM: NextPage = () => {
@@ -40,7 +41,7 @@ const FCM: NextPage = () => {
       onMessage(messaging, (payload) => {
         console.log('Message received. ', payload);
         if (payload.data?.redux_action) {
-          const queuePosition = JSON.parse(payload.data.redux_action).payload as QueuePosition
+          const queuePosition = JSON.parse(payload.data.redux_action).payload as IQueuePosition
           dispatch(updateQueue(queuePosition))
           console.log('queuePosition', queuePosition)
         }
