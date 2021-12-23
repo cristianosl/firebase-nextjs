@@ -21,13 +21,14 @@ const RealtimeDatabase: NextPage = () => {
     // Get a reference to the database service
     const db = getDatabase(firebaseApp);
     const starCountRef = ref(db, '/telemedicine/queuePositions/123123');
-    onValue(starCountRef, (snapshot) => {
+    const unsubscribe = onValue(starCountRef, (snapshot) => {
       const data = snapshot.val() as IQueuePosition | undefined;
       if (data) {
         dispatch(updateQueue(data))
         console.log('data', data);
       }
     });
+
     /*
     {
       "123123": {
@@ -38,8 +39,12 @@ const RealtimeDatabase: NextPage = () => {
       }
     }
     */
+    return () => {
+      unsubscribe()
+    }
 
-  }, [dispatch])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <div className="container">
