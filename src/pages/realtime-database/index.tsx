@@ -28,6 +28,16 @@ const RealtimeDatabase: NextPage = () => {
         console.log('data', data);
       }
     });
+    /*
+    {
+      "123123": {
+        "id": "84182",
+        "position": "11",
+        "status": "ENQUEUED",
+        "updatedAt": "2021-12-21T14:09:10.030Z"
+      }
+    }
+    */
 
   }, [dispatch])
 
