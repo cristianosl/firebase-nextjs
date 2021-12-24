@@ -2,24 +2,19 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { useEffect } from 'react'
-import { firebaseConfig } from '../../config/firebase'
 import { useAppSelector, useAppDispatch } from '../../store/hooks'
 import { shallowEqual } from 'react-redux';
-import { initializeApp } from 'firebase/app';
 import QueuePositions from '../../components/QueuePositions';
 import { updateQueue } from '../../store/queue';
 import Link from 'next/link';
 import { IQueuePosition } from '../../types/QueuePosition';
-
+import { firebaseApp } from '../../config/firebaseInit';
 
 const FCM: NextPage = () => {
   const dispatch = useAppDispatch()
 
   const cardCoa = useAppSelector(state => state.queue, shallowEqual)
   useEffect(() => {
-    // Initialize Firebase
-    const firebaseApp = initializeApp(firebaseConfig);
-
     const messaging = getMessaging(firebaseApp)
     if (messaging) {
       getToken(messaging, { vapidKey: process.env.NEXT_PUBLIC_FIREBASE_FCM_KEY_PAIR }).then((currentToken) => {

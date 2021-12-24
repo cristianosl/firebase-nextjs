@@ -8,29 +8,23 @@ import QueuePositions from '../../components/QueuePositions'
 import Link from 'next/link'
 import { IQueuePosition, QueueStatus } from '../../types/QueuePosition'
 import { updateQueue } from '../../store/queue'
-import { getFirestore, doc, onSnapshot } from "firebase/firestore";
+import { getFirestore, doc, onSnapshot, Timestamp } from "firebase/firestore";
+import { firebaseApp } from '../../config/firebaseInit'
+import { getQueuePositionByUserId } from '../api/firestore/queuePosition/getQueuePositionByUserId'
 
-type FSQueuePosition = {
+export type FSQueuePosition = {
   id: number
   attendanceId?: number | null
   position: number | null
   status: QueueStatus
-  updatedAt: {
-    nanoseconds: number
-    seconds: number,
-  }
+  updatedAt: Timestamp
 }
 const Firestore: NextPage = () => {
 
   const dispatch = useAppDispatch()
   useEffect(() => {
-    // Initialize Firebase
-    const firebaseApp = initializeApp(firebaseConfig);
 
-    // Get a reference to the database service
-    const db = getFirestore(firebaseApp);
-
-    const unsub = onSnapshot(doc(db, "queuePositions", "123123"), (doc) => {
+    const unsub = onSnapshot(getQueuePositionByUserId(123123), (doc) => {
       const currentData = doc.data() as FSQueuePosition | undefined
       if (currentData) {
         const dateSeconds = currentData.updatedAt.seconds * 1000
