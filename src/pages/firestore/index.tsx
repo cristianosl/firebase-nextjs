@@ -1,15 +1,12 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useEffect } from 'react'
-import { firebaseConfig } from '../../config/firebase'
 import { useAppDispatch } from '../../store/hooks'
-import { initializeApp } from 'firebase/app';
 import QueuePositions from '../../components/QueuePositions'
 import Link from 'next/link'
 import { IQueuePosition, QueueStatus } from '../../types/QueuePosition'
 import { updateQueue } from '../../store/queue'
-import { getFirestore, doc, onSnapshot, Timestamp } from "firebase/firestore";
-import { firebaseApp } from '../../config/firebaseInit'
+import { onSnapshot, Timestamp } from "firebase/firestore";
 import { getQueuePositionByUserId } from '../api/firestore/queuePosition/getQueuePositionByUserId'
 
 export type FSQueuePosition = {
