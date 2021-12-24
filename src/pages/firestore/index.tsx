@@ -4,14 +4,19 @@ import { useEffect } from 'react'
 import { firebaseConfig } from '../../config/firebase'
 import { useAppDispatch } from '../../store/hooks'
 import { initializeApp } from 'firebase/app';
-import { getDatabase, onValue, ref } from "firebase/database";
 import QueuePositions from '../../components/QueuePositions'
 import Link from 'next/link'
-import { IQueuePosition } from '../../types/QueuePosition'
+import { IQueuePosition, QueueStatus } from '../../types/QueuePosition'
 import { updateQueue } from '../../store/queue'
+import { getFirestore, doc, onSnapshot, DocumentData } from "firebase/firestore";
 
-
-const RealtimeDatabase: NextPage = () => {
+type FSQueuePosition = {
+  id: number
+  position: number
+  status: QueueStatus
+  updateAt: Date
+}
+const Firestore: NextPage = () => {
 
   const dispatch = useAppDispatch()
   useEffect(() => {
@@ -19,30 +24,23 @@ const RealtimeDatabase: NextPage = () => {
     const firebaseApp = initializeApp(firebaseConfig);
 
     // Get a reference to the database service
-    const db = getDatabase(firebaseApp);
-    const starCountRef = ref(db, '/telemedicine/queuePositions/123123');
-    const unsub = onValue(starCountRef, (snapshot) => {
-      const data = snapshot.val() as IQueuePosition | undefined;
-      console.log('data', data);
-      if (data) {
-        dispatch(updateQueue(data))
+    const db = getFirestore(firebaseApp);
+    const unsub = onSnapshot<DocumentData>(doc(db, "queuePositions", "123123"), (doc) => {
+      const currentData = doc.data()
+      const coaPosition: IQueuePosition = {
+        attendanceId: null,
+        id: currentData?.id || "0",
+        position: currentData?.position || null,
+        status: currentData?.status || "ENQUEUED",
+        updatedAt: new Date(currentData?.updatedAt.seconds * 1000).toISOString()
       }
+      console.log("Current data: ", currentData);
+      console.log("coaPosition: ", coaPosition);
+      dispatch(updateQueue(coaPosition))
     });
-
-    /*
-    {
-      "123123": {
-        "id": "84182",
-        "position": "11",
-        "status": "ENQUEUED",
-        "updatedAt": "2021-12-21T14:09:10.030Z"
-      }
-    }
-    */
     return () => {
       unsub()
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -57,13 +55,13 @@ const RealtimeDatabase: NextPage = () => {
       <nav aria-label="breadcrumb">
         <ol className="breadcrumb">
           <li className="breadcrumb-item"><Link href="/">Home</Link></li>
-          <li className="breadcrumb-item active" aria-current="page">Realtime Database</li>
+          <li className="breadcrumb-item active" aria-current="page">Firestore</li>
         </ol>
       </nav>
-      <h2>Realtime Database</h2>
+      <h2>Firestore</h2>
       <QueuePositions />
     </div>
   )
 }
 
-export default RealtimeDatabase
+export default Firestore
