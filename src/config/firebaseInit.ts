@@ -4,6 +4,6 @@ import { firebaseConfig } from "./firebase";
 
 // Initialize Firebase
 export const firebaseApp = initializeApp(firebaseConfig);
-export const getFirebaseAnalytics = isSupported().then(
-  (supported) => supported && getAnalytics(firebaseApp)
+export const getFirebaseAnalytics = isSupported().then((supported) =>
+  supported ? getAnalytics(firebaseApp) : undefined
 );
