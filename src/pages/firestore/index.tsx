@@ -8,13 +8,17 @@ import QueuePositions from '../../components/QueuePositions'
 import Link from 'next/link'
 import { IQueuePosition, QueueStatus } from '../../types/QueuePosition'
 import { updateQueue } from '../../store/queue'
-import { getFirestore, doc, onSnapshot, DocumentData } from "firebase/firestore";
+import { getFirestore, doc, onSnapshot } from "firebase/firestore";
 
 type FSQueuePosition = {
   id: number
-  position: number
+  attendanceId?: number | null
+  position: number | null
   status: QueueStatus
-  updateAt: Date
+  updatedAt: {
+    nanoseconds: number
+    seconds: number,
+  }
 }
 const Firestore: NextPage = () => {
 
@@ -25,18 +29,22 @@ const Firestore: NextPage = () => {
 
     // Get a reference to the database service
     const db = getFirestore(firebaseApp);
-    const unsub = onSnapshot<DocumentData>(doc(db, "queuePositions", "123123"), (doc) => {
-      const currentData = doc.data()
-      const coaPosition: IQueuePosition = {
-        attendanceId: null,
-        id: currentData?.id || "0",
-        position: currentData?.position || null,
-        status: currentData?.status || "ENQUEUED",
-        updatedAt: new Date(currentData?.updatedAt.seconds * 1000).toISOString()
+
+    const unsub = onSnapshot(doc(db, "queuePositions", "123123"), (doc) => {
+      const currentData = doc.data() as FSQueuePosition | undefined
+      if (currentData) {
+        const dateSeconds = currentData.updatedAt.seconds * 1000
+        const coaPosition: IQueuePosition = {
+          attendanceId: currentData.attendanceId?.toString() || null,
+          id: currentData.id.toString(),
+          position: currentData.position?.toString() || null,
+          status: currentData.status,
+          updatedAt: new Date(dateSeconds).toISOString()
+        }
+        console.log("Current data: ", currentData);
+        console.log("coaPosition: ", coaPosition);
+        dispatch(updateQueue(coaPosition))
       }
-      console.log("Current data: ", currentData);
-      console.log("coaPosition: ", coaPosition);
-      dispatch(updateQueue(coaPosition))
     });
     return () => {
       unsub()
