@@ -63,7 +63,6 @@ const QueuePositions: React.FC = () => {
         <button
           className='btn btn-secondary'
           onClick={() => {
-
             dispatch(updateQueueStatusToReady({ attendanceId: "147608", updatedAt: "2021-12-21T14:09:31.135Z" }))
           }}
         >

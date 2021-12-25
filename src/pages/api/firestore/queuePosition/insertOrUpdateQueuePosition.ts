@@ -1,6 +1,5 @@
-import { getFirestore, Timestamp, setDoc, doc } from "firebase/firestore";
+import { Timestamp, setDoc } from "firebase/firestore";
 import { NextApiRequest, NextApiResponse } from "next";
-import { firebaseApp } from "../../../../config/firebaseInit";
 import { FSQueuePosition } from "../../../firestore";
 import { getQueuePositionByUserId } from "./getQueuePositionByUserId";
 import { QueuePositionBodyData } from "./[userId]";
