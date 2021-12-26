@@ -22,8 +22,8 @@ const Firestore: NextPage = () => {
   const dispatch = useAppDispatch()
   useEffect(() => {
     const db = getFirestore(firebaseApp);
-    const queuePositionService = new QueuePositionService(db, 123123);
-    const unsub = queuePositionService.onSnapshot((queuePosition) => {
+    const service = new QueuePositionService(db, 123123);
+    const unsub = service.onSnapshot((queuePosition) => {
       console.log("coaPosition: ", queuePosition);
       dispatch(updateQueue(queuePosition))
     })

@@ -1,3 +1,4 @@
+/* eslint-disable unused-imports/no-unused-vars */
 import { IQueuePosition, QueueStatus } from "../../types/QueuePosition"
 
 export const CardCoaEnqueued = ({ position }: IQueuePosition) => (<>Você é o {position}º da fila</>)

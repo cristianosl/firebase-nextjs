@@ -2,8 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { useEffect } from 'react'
-import { useAppSelector, useAppDispatch } from '../../store/hooks'
-import { shallowEqual } from 'react-redux';
+import { useAppDispatch } from '../../store/hooks'
 import QueuePositions from '../../components/QueuePositions';
 import { updateQueue } from '../../store/queue';
 import Link from 'next/link';
@@ -13,7 +12,6 @@ import { firebaseApp } from '../../config/firebaseInit';
 const FCM: NextPage = () => {
   const dispatch = useAppDispatch()
 
-  const cardCoa = useAppSelector(state => state.queue, shallowEqual)
   useEffect(() => {
     const messaging = getMessaging(firebaseApp)
     if (messaging) {

@@ -24,8 +24,8 @@ export const insertOrUpdateQueuePosition = async (
   };
   try {
     const db = getFirestore(firebaseApp);
-    const queuePositionService = new QueuePositionService(db, Number(userId));
-    await queuePositionService.insertOrUpdate(newCoaPosition);
+    const service = new QueuePositionService(db, Number(userId));
+    await service.insertOrUpdate(newCoaPosition);
   } catch (error) {
     console.log("error", error);
   }

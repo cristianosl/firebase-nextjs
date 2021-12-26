@@ -12,9 +12,9 @@ export const deleteQueuePosition = async (
   } = req;
   try {
     const db = getFirestore(firebaseApp);
-    const queuePositionService = new QueuePositionService(db, Number(userId));
-    if (await queuePositionService.exists()) {
-      await queuePositionService.delete();
+    const service = new QueuePositionService(db, Number(userId));
+    if (await service.exists()) {
+      await service.delete();
     } else {
       res.status(404).json({ status: "Not Found" });
     }
