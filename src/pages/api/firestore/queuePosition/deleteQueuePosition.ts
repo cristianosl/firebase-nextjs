@@ -1,6 +1,7 @@
-import { deleteDoc, getDoc } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getQueuePositionByUserId } from "./getQueuePositionByUserId";
+import { firebaseApp } from "../../../../config/firebaseInit";
+import { QueuePositionService } from "../../../../services/QueuePositionService";
 
 export const deleteQueuePosition = async (
   req: NextApiRequest,
@@ -10,11 +11,10 @@ export const deleteQueuePosition = async (
     query: { userId },
   } = req;
   try {
-    const queuePositionRef = getQueuePositionByUserId(Number(userId));
-    const queuePositionSnap = await getDoc(queuePositionRef);
-
-    if (queuePositionSnap.exists()) {
-      await deleteDoc(queuePositionRef);
+    const db = getFirestore(firebaseApp);
+    const queuePositionService = new QueuePositionService(db, Number(userId));
+    if (await queuePositionService.exists()) {
+      await queuePositionService.delete();
     } else {
       res.status(404).json({ status: "Not Found" });
     }

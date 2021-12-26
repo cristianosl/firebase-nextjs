@@ -4,10 +4,11 @@ import { useEffect } from 'react'
 import { useAppDispatch } from '../../store/hooks'
 import QueuePositions from '../../components/QueuePositions'
 import Link from 'next/link'
-import { IQueuePosition, QueueStatus } from '../../types/QueuePosition'
+import { QueueStatus } from '../../types/QueuePosition'
 import { updateQueue } from '../../store/queue'
-import { onSnapshot, Timestamp } from "firebase/firestore";
-import { getQueuePositionByUserId } from '../api/firestore/queuePosition/getQueuePositionByUserId'
+import { getFirestore, Timestamp } from "firebase/firestore";
+import { firebaseApp } from '../../config/firebaseInit'
+import { QueuePositionService } from '../../services/QueuePositionService'
 
 export type FSQueuePosition = {
   id: number
@@ -20,23 +21,12 @@ const Firestore: NextPage = () => {
 
   const dispatch = useAppDispatch()
   useEffect(() => {
-
-    const unsub = onSnapshot(getQueuePositionByUserId(123123), (doc) => {
-      const currentData = doc.data() as FSQueuePosition | undefined
-      if (currentData) {
-        const dateSeconds = currentData.updatedAt.seconds * 1000
-        const coaPosition: IQueuePosition = {
-          attendanceId: currentData.attendanceId?.toString() || null,
-          id: currentData.id.toString(),
-          position: currentData.position?.toString() || null,
-          status: currentData.status,
-          updatedAt: new Date(dateSeconds).toISOString()
-        }
-        console.log("Current data: ", currentData);
-        console.log("coaPosition: ", coaPosition);
-        dispatch(updateQueue(coaPosition))
-      }
-    });
+    const db = getFirestore(firebaseApp);
+    const queuePositionService = new QueuePositionService(db, 123123);
+    const unsub = queuePositionService.onSnapshot((queuePosition) => {
+      console.log("coaPosition: ", queuePosition);
+      dispatch(updateQueue(queuePosition))
+    })
     return () => {
       unsub()
     }
