@@ -8,7 +8,7 @@ import { QueueStatus } from '../../types/QueuePosition'
 import { updateQueue } from '../../store/queue'
 import { getFirestore, Timestamp } from "firebase/firestore";
 import { firebaseApp } from '../../config/firebaseInit'
-import { QueuePositionService } from '../../services/QueuePositionService'
+import { PatientQueuePositionService } from '../../services/PatientQueuePositionService'
 
 export type FSQueuePosition = {
   id: number
@@ -22,8 +22,8 @@ const Firestore: NextPage = () => {
   const dispatch = useAppDispatch()
   useEffect(() => {
     const db = getFirestore(firebaseApp);
-    const service = new QueuePositionService(db, 123123);
-    const unsub = service.onSnapshot((queuePosition) => {
+    const patientQueuePosition = new PatientQueuePositionService(db, 123123);
+    const unsub = patientQueuePosition.onSnapshot((queuePosition) => {
       console.log("coaPosition: ", queuePosition);
       dispatch(updateQueue(queuePosition))
     })

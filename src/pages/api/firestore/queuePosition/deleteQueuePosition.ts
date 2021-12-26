@@ -1,7 +1,7 @@
 import { getFirestore } from "firebase/firestore";
 import { NextApiRequest, NextApiResponse } from "next";
 import { firebaseApp } from "../../../../config/firebaseInit";
-import { QueuePositionService } from "../../../../services/QueuePositionService";
+import { PatientQueuePositionService } from "../../../../services/PatientQueuePositionService";
 
 export const deleteQueuePosition = async (
   req: NextApiRequest,
@@ -12,9 +12,9 @@ export const deleteQueuePosition = async (
   } = req;
   try {
     const db = getFirestore(firebaseApp);
-    const service = new QueuePositionService(db, Number(userId));
-    if (await service.exists()) {
-      await service.delete();
+    const patientQueuePosition = new PatientQueuePositionService(db, Number(userId));
+    if (await patientQueuePosition.exists()) {
+      await patientQueuePosition.delete();
     } else {
       res.status(404).json({ status: "Not Found" });
     }

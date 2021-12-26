@@ -13,7 +13,7 @@ import { IQueuePosition } from "../types/QueuePosition";
 
 type OnSuccessCb = (_pos: IQueuePosition) => void;
 
-export class QueuePositionService {
+export class PatientQueuePositionService {
   private ref: DocumentReference<DocumentData>;
 
   constructor(private _db: Firestore, private _pacientId: Number) {
