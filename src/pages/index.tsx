@@ -19,7 +19,8 @@ const Home: NextPage = () => (
     <ul>
       <li><Link href="/fcm">Cloud messaging</Link></li>
       <li><Link href="/realtime-database">Realtime Database</Link></li>
-      <li><Link href="/firestore">Firestore</Link></li>
+      <li><Link href="/firestore">Firestore Database</Link></li>
+      <li><Link href="/graphql-subscriptions">Grapqh Subscriptions</Link></li>
     </ul>
   </div>
 )

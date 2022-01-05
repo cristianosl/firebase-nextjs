@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useEffect } from 'react'
 import { useAppDispatch } from '../../store/hooks'
-import { getDatabase, onValue, ref } from "firebase/database";
+import { getDatabase, onDisconnect, onValue, ref } from "firebase/database";
 import QueuePositions from '../../components/QueuePositions'
 import Link from 'next/link'
 import { IQueuePosition } from '../../types/QueuePosition'
@@ -17,8 +17,15 @@ const RealtimeDatabase: NextPage = () => {
 
     // Get a reference to the database service
     const db = getDatabase(firebaseApp);
-    const starCountRef = ref(db, '/telemedicine/queuePositions/123123');
-    const unsub = onValue(starCountRef, (snapshot) => {
+    const queueRef = ref(db, '/telemedicine/queuePositions/123123');
+    onDisconnect(queueRef).set({
+      "id": "84182",
+      "position": "11",
+      "status": "ENQUEUED",
+      "updatedAt": "2021-12-21T14:09:10.030Z",
+      "saiu": true
+    })
+    const unsub = onValue(queueRef, (snapshot) => {
       const data = snapshot.val() as IQueuePosition | undefined;
       console.log('data', data);
       if (data) {
