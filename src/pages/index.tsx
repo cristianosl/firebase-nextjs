@@ -21,6 +21,7 @@ const Home: NextPage = () => (
       <li><Link href="/realtime-database">Realtime Database</Link></li>
       <li><Link href="/firestore">Firestore Database</Link></li>
       <li><Link href="/graphql-subscriptions">Grapqh Subscriptions</Link></li>
+      <li><Link href="/quit-queue">Quit Queue</Link></li>
     </ul>
   </div>
 )
