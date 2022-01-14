@@ -14,17 +14,18 @@ const QuitQueue: NextPage = () => {
     console.log('handleUnload')
     const data = new FormData()
     data.set("userAgent", navigator.userAgent)
-    navigator.sendBeacon('http://localhost:3001/api/quit-queue', data);
+    data.set("token", "token")
+    navigator.sendBeacon('http://192.168.15.23:3001/api/quit-queue', data);
   }
   useEffect(() => {
 
     window.addEventListener('beforeunload', handleBeforeUnload)
-    window.addEventListener('unload', handleUnload)
-    // document.addEventListener('visibilitychange', handleUnload);
+    // window.addEventListener('unload', handleUnload)
+    document.addEventListener('visibilitychange', handleUnload);
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload)
-      // document.removeEventListener('visibilitychange', handleUnload);
-      window.removeEventListener('unload', handleUnload)
+      document.removeEventListener('visibilitychange', handleUnload);
+      // window.removeEventListener('unload', handleUnload)
 
     }
   }, [])

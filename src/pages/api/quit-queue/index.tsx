@@ -17,7 +17,7 @@ export default async function handler(
       break;
     case "POST":
       const retorno = { "navegador": req.body }
-      await sleep(5000).then(() => {
+      await sleep(1000).then(() => {
         res.status(200).json(retorno);
       })
       console.log('chamouuuuu', retorno)
