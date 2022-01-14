@@ -2,12 +2,13 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useEffect } from 'react'
 import { useAppDispatch } from '../../store/hooks'
-import { getDatabase, onDisconnect, onValue, ref } from "firebase/database";
+import { getDatabase, onDisconnect, onValue, ref, set } from "firebase/database";
 import QueuePositions from '../../components/QueuePositions'
 import Link from 'next/link'
 import { IQueuePosition } from '../../types/QueuePosition'
 import { updateQueue } from '../../store/queue'
 import { firebaseApp } from '../../config/firebaseInit'
+import { Timestamp } from 'firebase/firestore';
 
 
 const RealtimeDatabase: NextPage = () => {
@@ -17,14 +18,22 @@ const RealtimeDatabase: NextPage = () => {
 
     // Get a reference to the database service
     const db = getDatabase(firebaseApp);
-    const queueRef = ref(db, '/telemedicine/queuePositions/123123');
-    onDisconnect(queueRef).set({
-      "id": "84182",
-      "position": "11",
-      "status": "ENQUEUED",
-      "updatedAt": "2021-12-21T14:09:10.030Z",
-      "saiu": true
+    const userStatusDatabaseRef = ref(db, '/status/123123');
+    const isOfflineForDatabase = {
+      state: 'offline',
+      last_changed: Timestamp.now(),
+    };
+    const isOnlineForDatabase = {
+      state: 'online',
+      last_changed: Timestamp.now(),
+    }
+    onDisconnect(userStatusDatabaseRef).set(isOfflineForDatabase).then(() => {
+      console.log('set(userStatusDatabaseRef, isOnlineForDatabase)')
+      set(userStatusDatabaseRef, isOnlineForDatabase)
     })
+
+
+    const queueRef = ref(db, '/telemedicine/queuePositions/123123');
     const unsub = onValue(queueRef, (snapshot) => {
       const data = snapshot.val() as IQueuePosition | undefined;
       console.log('data', data);
