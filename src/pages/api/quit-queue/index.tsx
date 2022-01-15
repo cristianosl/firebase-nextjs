@@ -10,13 +10,8 @@ export default async function handler(
     return new Promise(resolve => setTimeout(resolve, ms));
   }
   switch (method) {
-    case "GET":
-      await sleep(5000).then(() => {
-        res.status(200).json({ "hello": "5000" });
-      })
-      break;
     case "POST":
-      const retorno = { "navegador": req.body }
+      const retorno = { "data": JSON.parse(req.body) }
       await sleep(1000).then(() => {
         res.status(200).json(retorno);
       })
