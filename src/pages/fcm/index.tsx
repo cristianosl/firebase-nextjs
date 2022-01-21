@@ -7,13 +7,13 @@ import QueuePositions from '../../components/QueuePositions';
 import { updateQueue } from '../../store/queue';
 import Link from 'next/link';
 import { IQueuePosition } from '../../types/QueuePosition';
-import { firebaseApp } from '../../config/firebaseInit';
+import { getFirebaseApp } from '../../services/getFirebaseApp';
 
 const FCM: NextPage = () => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    const messaging = getMessaging(firebaseApp)
+    const messaging = getMessaging(getFirebaseApp())
     if (messaging) {
       getToken(messaging, { vapidKey: process.env.NEXT_PUBLIC_FIREBASE_FCM_KEY_PAIR }).then((currentToken) => {
         if (currentToken) {

@@ -7,8 +7,8 @@ import QueuePositions from '../../components/QueuePositions'
 import Link from 'next/link'
 import { IQueuePosition } from '../../types/QueuePosition'
 import { updateQueue } from '../../store/queue'
-import { firebaseApp } from '../../config/firebaseInit'
 import { Timestamp } from 'firebase/firestore';
+import { getFirebaseApp } from '../../services/getFirebaseApp';
 
 
 const RealtimeDatabase: NextPage = () => {
@@ -17,7 +17,7 @@ const RealtimeDatabase: NextPage = () => {
   useEffect(() => {
 
     // Get a reference to the database service
-    const db = getDatabase(firebaseApp);
+    const db = getDatabase(getFirebaseApp());
     const userStatusDatabaseRef = ref(db, '/status/123123');
     const isOfflineForDatabase = {
       state: 'offline',

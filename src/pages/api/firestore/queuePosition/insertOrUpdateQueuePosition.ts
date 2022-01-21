@@ -1,6 +1,6 @@
 import { Timestamp, getFirestore } from "firebase/firestore";
 import { NextApiRequest, NextApiResponse } from "next";
-import { firebaseApp } from "../../../../config/firebaseInit";
+import { getFirebaseApp } from "../../../../services/getFirebaseApp";
 import { PatientQueuePositionService } from "../../../../services/PatientQueuePositionService";
 import { FSQueuePosition } from "../../../firestore";
 import { QueuePositionBodyData } from "./[userId]";
@@ -23,8 +23,11 @@ export const insertOrUpdateQueuePosition = async (
     attendanceId,
   };
   try {
-    const db = getFirestore(firebaseApp);
-    const patientQueuePosition = new PatientQueuePositionService(db, Number(userId));
+    const db = getFirestore(getFirebaseApp());
+    const patientQueuePosition = new PatientQueuePositionService(
+      db,
+      Number(userId)
+    );
     await patientQueuePosition.insertOrUpdate(newQueuePosition);
   } catch (error) {
     console.log("error", error);

@@ -1,6 +1,6 @@
 import { getFirestore } from "firebase/firestore";
 import { NextApiRequest, NextApiResponse } from "next";
-import { firebaseApp } from "../../../../config/firebaseInit";
+import { getFirebaseApp } from "../../../../services/getFirebaseApp";
 import { PatientQueuePositionService } from "../../../../services/PatientQueuePositionService";
 
 export const deleteQueuePosition = async (
@@ -11,8 +11,11 @@ export const deleteQueuePosition = async (
     query: { userId },
   } = req;
   try {
-    const db = getFirestore(firebaseApp);
-    const patientQueuePosition = new PatientQueuePositionService(db, Number(userId));
+    const db = getFirestore(getFirebaseApp());
+    const patientQueuePosition = new PatientQueuePositionService(
+      db,
+      Number(userId)
+    );
     if (await patientQueuePosition.exists()) {
       await patientQueuePosition.delete();
     } else {
